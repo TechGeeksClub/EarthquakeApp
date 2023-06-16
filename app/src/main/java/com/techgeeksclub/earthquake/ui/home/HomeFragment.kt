@@ -14,6 +14,7 @@ import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var adapter : EarthquakeRecyclerView
 
 
     override fun onCreateView(
@@ -21,13 +22,17 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater)
-        // RecyclerView'i ayarlayın
-        // RecyclerView'i ayarlayın
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val linearLayoutManager :  LinearLayoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = linearLayoutManager
+        adapter = EarthquakeRecyclerView()
+        binding.recyclerView.adapter = adapter
+
 
     }
 
