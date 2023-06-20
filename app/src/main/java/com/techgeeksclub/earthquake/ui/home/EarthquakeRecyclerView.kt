@@ -22,7 +22,7 @@ class EarthquakeRecyclerView : RecyclerView.Adapter<EarthquakeRecyclerView.Earth
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return 20
     }
 
     override fun onBindViewHolder(holder: EarthquakeViewHolder, position: Int) {
