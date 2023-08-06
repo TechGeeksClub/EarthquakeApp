@@ -1,12 +1,23 @@
 package com.techgeeksclub.earthquake.model
 
+import com.example.example.Metadata
+import com.example.example.Result
+import com.google.gson.annotations.SerializedName
+
+
 data class Earthquake(
-    //büyüklük (magnitude), konum (location), tarih (date), zaman (time), derinlik (depth), enlem (latitude), boylam(longitude)
-    val magnitude: Double,
-    val location: String,
-    val date: String,
-    val time: String,
-    val depth: Double,
-    val latitude: Double,
-    val longitude: Double
+
+    @SerializedName("status")
+    var status: Boolean? = null,
+    @SerializedName("httpStatus")
+    var httpStatus: Int? = null,
+    @SerializedName("serverloadms")
+    var serverloadms: Int? = null,
+    @SerializedName("desc")
+    var desc: String? = null,
+    @SerializedName("metadata")
+    var metadata: Metadata? = Metadata(),
+    @SerializedName("result")
+    var result: ArrayList<Result> = arrayListOf()
+
 )
