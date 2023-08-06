@@ -12,21 +12,21 @@ class EarthquakeRepository {
 
     init {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.example.com/") // API base URL
+            .baseUrl("https://api.orhanaydogdu.com.tr/") // API base URL
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         apiService = retrofit.create(ApiService::class.java)
     }
 
-    fun getEarthquakes(onSuccess : (List<Earthquake>)-> Unit, onFailure: (Throwable) -> Unit){
+    fun getEarthquakes(onSuccess : (Earthquake)-> Unit, onFailure: (Throwable) -> Unit){
         val call = apiService.getEarthquakes()
 
-        call.enqueue(object : Callback<List<Earthquake>>{
+        call.enqueue(object : Callback<Earthquake>{
 
             override fun onResponse(
-                call: Call<List<Earthquake>>,
-                response: Response<List<Earthquake>>
+                call: Call<Earthquake>,
+                response: Response<Earthquake>
             ) {
                 if (response.isSuccessful) {
                     val earthquakes = response.body()
@@ -36,7 +36,7 @@ class EarthquakeRepository {
                 }
             }
 
-            override fun onFailure(call: Call<List<Earthquake>>, t: Throwable) {
+            override fun onFailure(call: Call<Earthquake>, t: Throwable) {
                 onFailure(t)
             }
         } )
