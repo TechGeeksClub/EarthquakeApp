@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface ApiService {
-    @GET("earthquakes") // API'den verileri almak için kullanılacak endpoint
-    fun getEarthquakes(): Call<List<Earthquake>>
+    @GET("deprem/kandilli/live") // API'den verileri almak için kullanılacak endpoint
+    fun getEarthquakes(): Call<Earthquake>
 }
