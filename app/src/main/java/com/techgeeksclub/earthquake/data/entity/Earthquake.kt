@@ -1,4 +1,6 @@
-package com.techgeeksclub.earthquake.model
+package com.techgeeksclub.earthquake.data.entity
+
+import java.io.Serializable
 
 data class Earthquake(
     //büyüklük (magnitude), konum (location), tarih (date), zaman (time), derinlik (depth), enlem (latitude), boylam(longitude)
@@ -9,4 +11,4 @@ data class Earthquake(
     val depth: Double,
     val latitude: Double,
     val longitude: Double
-)
+) : Serializable
