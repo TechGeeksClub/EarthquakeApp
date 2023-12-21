@@ -1,4 +1,4 @@
-package com.techgeeksclub.earthquake.ui.emergency
+package com.techgeeksclub.earthquake.ui.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -7,25 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.techgeeksclub.earthquake.R
+import com.techgeeksclub.earthquake.ui.viewmodel.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class EmergencyFragment : Fragment() {
+@AndroidEntryPoint
+class SettingsFragment : Fragment() {
 
     companion object {
-        fun newInstance() = EmergencyFragment()
+        fun newInstance() = SettingsFragment()
     }
 
-    private lateinit var viewModel: EmergencyViewModel
+    private lateinit var viewModel: SettingsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_emergency, container, false)
+        return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(EmergencyViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
         // TODO: Use the ViewModel
     }
 
