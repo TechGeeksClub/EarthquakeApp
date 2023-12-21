@@ -1,12 +1,15 @@
-package com.techgeeksclub.earthquake.ui.fragment
+package com.techgeeksclub.earthquake.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.example.Result
+import com.techgeeksclub.earthquake.model.Earthquake
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -14,17 +17,15 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
-import com.techgeeksclub.earthquake.ui.adapter.EarthquakeAdapter
-import com.techgeeksclub.earthquake.ui.viewmodel.HomeViewModel
-import dagger.hilt.android.AndroidEntryPoint
+import com.techgeeksclub.earthquake.repository.EarthquakeRepository
 
 
-@AndroidEntryPoint
 class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var adapter : EarthquakeAdapter
+    private lateinit var adapter : EarthquakeRecyclerView
     private var mMap: GoogleMap? = null
+    private lateinit var list : ArrayList<Earthquake>
 
 
     override fun onCreateView(
@@ -40,10 +41,27 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         val linearLayoutManager :  LinearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
-        adapter = EarthquakeAdapter()
+        adapter = EarthquakeRecyclerView(list)
         binding.recyclerView.adapter = adapter
         val mapFragment = childFragmentManager.findFragmentById(com.techgeeksclub.earthquake.R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+        val earthquakeRepository = EarthquakeRepository()
+        earthquakeRepository.getEarthquakes(
+            onSuccess = {
+                it.result.forEach {
+                    Log.d("Eartquake",it.title.toString())
+                    Log.d("Eartquake",it.mag.toString())
+                    Log.d("Eartquake",it.depth.toString())
+
+
+                }
+            },
+            onFailure = {
+                Log.d("Eartquake",it.message.toString())
+
+            }
+        )
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

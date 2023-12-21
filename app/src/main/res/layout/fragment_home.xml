@@ -7,8 +7,8 @@
     <fragment
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_weight="0.4"
+        android:layout_height="260dp"
+        android:layout_weight="0.2"
         android:id="@+id/map"
         tools:context=".MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
@@ -17,7 +17,7 @@
     <FrameLayout
         android:id="@+id/panelContainer"
         android:layout_width="match_parent"
-        android:layout_weight="0.5"
+        android:layout_weight="0.8"
 
         android:layout_height="300dp" >
         <androidx.recyclerview.widget.RecyclerView
