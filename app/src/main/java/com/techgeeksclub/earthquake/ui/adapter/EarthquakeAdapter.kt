@@ -1,4 +1,4 @@
-package com.techgeeksclub.earthquake.ui.home
+package com.techgeeksclub.earthquake.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.techgeeksclub.earthquake.R
 
-class EarthquakeRecyclerView : RecyclerView.Adapter<EarthquakeRecyclerView.EarthquakeViewHolder>() {
+class EarthquakeAdapter : RecyclerView.Adapter<EarthquakeAdapter.EarthquakeViewHolder>() {
 
     class EarthquakeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var countryFlagIV : ImageView = itemView.findViewById(R.id.countryFlagIV)

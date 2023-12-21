@@ -1,6 +1,5 @@
-package com.techgeeksclub.earthquake.ui.home
+package com.techgeeksclub.earthquake.ui.fragment
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,16 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
+import com.techgeeksclub.earthquake.ui.adapter.EarthquakeAdapter
+import com.techgeeksclub.earthquake.ui.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var adapter : EarthquakeRecyclerView
+    private lateinit var adapter : EarthquakeAdapter
     private var mMap: GoogleMap? = null
 
 
@@ -37,7 +40,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         val linearLayoutManager :  LinearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
-        adapter = EarthquakeRecyclerView()
+        adapter = EarthquakeAdapter()
         binding.recyclerView.adapter = adapter
         val mapFragment = childFragmentManager.findFragmentById(com.techgeeksclub.earthquake.R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
