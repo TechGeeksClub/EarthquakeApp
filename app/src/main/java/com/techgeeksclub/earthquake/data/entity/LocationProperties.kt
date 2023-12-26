@@ -1,6 +1,10 @@
-package com.example.example
+package com.techgeeksclub.earthquake.data.entity
 
 import com.google.gson.annotations.SerializedName
+import com.techgeeksclub.earthquake.data.entity.Airports
+import com.techgeeksclub.earthquake.data.entity.ClosestCities
+import com.techgeeksclub.earthquake.data.entity.ClosestCity
+import com.techgeeksclub.earthquake.data.entity.EpiCenter
 
 
 data class LocationProperties(

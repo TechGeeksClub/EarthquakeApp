@@ -1,4 +1,4 @@
-package com.techgeeksclub.earthquake.ui.home
+package com.techgeeksclub.earthquake.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.example.Result
-import com.techgeeksclub.earthquake.model.Earthquake
+import com.techgeeksclub.earthquake.data.entity.Earthquake
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -17,13 +16,15 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
-import com.techgeeksclub.earthquake.repository.EarthquakeRepository
+import com.techgeeksclub.earthquake.data.repository.EarthquakeRepository
+import com.techgeeksclub.earthquake.ui.adapter.EarthquakeRecyclerView
+import com.techgeeksclub.earthquake.ui.viewmodel.HomeViewModel
 
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var adapter : EarthquakeRecyclerView
+    private var adapter : EarthquakeRecyclerView? = null
     private var mMap: GoogleMap? = null
     private lateinit var list : ArrayList<Earthquake>
 

@@ -1,4 +1,4 @@
-package com.techgeeksclub.earthquake.ui.home
+package com.techgeeksclub.earthquake.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 

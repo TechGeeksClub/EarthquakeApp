@@ -1,6 +1,8 @@
-package com.example.example
+package com.techgeeksclub.earthquake.data.entity
 
 import com.google.gson.annotations.SerializedName
+import com.techgeeksclub.earthquake.data.entity.Geojson
+import com.techgeeksclub.earthquake.data.entity.LocationProperties
 
 
 data class Result(

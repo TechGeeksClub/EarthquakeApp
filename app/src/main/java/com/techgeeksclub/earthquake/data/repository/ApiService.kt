@@ -1,6 +1,6 @@
-package com.techgeeksclub.earthquake.repository
+package com.techgeeksclub.earthquake.data.repository
 
-import com.techgeeksclub.earthquake.model.Earthquake
+import com.techgeeksclub.earthquake.data.entity.Earthquake
 import retrofit2.Call
 import retrofit2.http.GET
 

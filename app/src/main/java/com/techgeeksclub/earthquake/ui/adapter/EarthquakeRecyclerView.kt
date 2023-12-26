@@ -1,23 +1,15 @@
-package com.techgeeksclub.earthquake.ui.home
+package com.techgeeksclub.earthquake.ui.adapter
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.example.Result
+import com.techgeeksclub.earthquake.data.entity.Result
 import com.techgeeksclub.earthquake.R
-import com.techgeeksclub.earthquake.model.Earthquake
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.Period
-import java.time.format.DateTimeFormatter
-import java.util.Date
+import com.techgeeksclub.earthquake.data.entity.Earthquake
 
-@RequiresApi(Build.VERSION_CODES.O)
 class EarthquakeRecyclerView(val earthquake : ArrayList<Earthquake>) : RecyclerView.Adapter<EarthquakeRecyclerView.EarthquakeViewHolder>() {
     var result : ArrayList<Result> = arrayListOf()
     var howManyMinutes : ArrayList<String> = arrayListOf()
@@ -25,7 +17,7 @@ class EarthquakeRecyclerView(val earthquake : ArrayList<Earthquake>) : RecyclerV
     var country : ArrayList<String> = arrayListOf()
 
     init {
-        earthquake.forEach {
+        /*earthquake.forEach {
             result = it.result
             it.result.forEach {
                 val dateNow = LocalDateTime.now()
@@ -36,7 +28,7 @@ class EarthquakeRecyclerView(val earthquake : ArrayList<Earthquake>) : RecyclerV
                 //howManyMinutes = it.date
 
             }
-        }
+        }*/
     }
 
     class EarthquakeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

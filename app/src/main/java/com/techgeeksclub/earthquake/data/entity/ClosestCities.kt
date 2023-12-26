@@ -1,9 +1,9 @@
-package com.example.example
+package com.techgeeksclub.earthquake.data.entity
 
 import com.google.gson.annotations.SerializedName
 
 
-data class ClosestCity(
+data class ClosestCities(
 
     @SerializedName("name")
     var name: String? = null,
