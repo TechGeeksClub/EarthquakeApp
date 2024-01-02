@@ -8,6 +8,6 @@ import retrofit2.http.GET
 
 interface EarthquakeDao {
 
-    @GET("earthquakes")
+    @GET("deprem/kandilli/live")
     fun getEarthquakes(): EarthquakeResponse
 }
