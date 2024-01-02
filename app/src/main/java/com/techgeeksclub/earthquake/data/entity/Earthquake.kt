@@ -1,7 +1,5 @@
-package com.techgeeksclub.earthquake.model
+package com.techgeeksclub.earthquake.data.entity
 
-import com.example.example.Metadata
-import com.example.example.Result
 import com.google.gson.annotations.SerializedName
 
 
