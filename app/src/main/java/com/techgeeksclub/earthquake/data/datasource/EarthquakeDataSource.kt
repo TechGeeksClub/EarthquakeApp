@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 
 class EarthquakeDataSource (val context: Context, var earthquakeDao: EarthquakeDao) {
 
-    suspend fun getEarthquakes() : List<Earthquake> = withContext(Dispatchers.IO) {
-        return@withContext earthquakeDao.getEarthquakes().earthquakes
+    suspend fun getEarthquakes() : Earthquake = withContext(Dispatchers.IO) {
+        return@withContext earthquakeDao.getEarthquakes()
     }
 }

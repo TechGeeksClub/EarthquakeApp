@@ -8,7 +8,7 @@ import com.techgeeksclub.earthquake.data.entity.Earthquake
 import com.techgeeksclub.earthquake.data.entity.Result
 import com.techgeeksclub.earthquake.databinding.EarthquakeItemBinding
 
-class EarthquakeAdapter (var mContext: Context, var earthquakeList: List<Earthquake>) : RecyclerView.Adapter<EarthquakeAdapter.HomePageItemHolder>(){
+class EarthquakeAdapter (var mContext: Context, var earthquakeList: Earthquake) : RecyclerView.Adapter<EarthquakeAdapter.HomePageItemHolder>(){
 
     inner class HomePageItemHolder(var item: EarthquakeItemBinding) : RecyclerView.ViewHolder(item.root)
 
@@ -35,14 +35,14 @@ class EarthquakeAdapter (var mContext: Context, var earthquakeList: List<Earthqu
     }
 
     override fun getItemCount(): Int {
-        return earthquakeList.size
+        return earthquakeList.result.size
     }
 
     override fun onBindViewHolder(holder: HomePageItemHolder, position: Int) {
-        val earthquake = earthquakeList[position]
+        val earthquake = earthquakeList.result
         val binding = holder.item
 
-        result = earthquake.result
+        result = earthquake
 
         binding.countryTV.text = result[position].title.toString()
 

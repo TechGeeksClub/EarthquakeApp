@@ -10,5 +10,5 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class EarthquakeRepository (var earthquakeDataSource: EarthquakeDataSource){
 
-    suspend fun getEarthquakes() : List<Earthquake> = earthquakeDataSource.getEarthquakes()
+    suspend fun getEarthquakes() : Earthquake = earthquakeDataSource.getEarthquakes()
 }

@@ -14,8 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(var repository: EarthquakeRepository): ViewModel() {
 
-    private val _earthquakes = MutableLiveData<List<Earthquake>>()
-    val earthquakes: LiveData<List<Earthquake>> get() = _earthquakes
+    private val _earthquakes = MutableLiveData<Earthquake>()
+    val earthquakes: LiveData<Earthquake> get() = _earthquakes
 
     init {
         loadEarthquakes()

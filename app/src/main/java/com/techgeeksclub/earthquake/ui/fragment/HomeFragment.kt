@@ -51,12 +51,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         viewModel.earthquakes.observe(viewLifecycleOwner){
             val adapter = EarthquakeAdapter(requireContext(),it)
             binding.recyclerView.adapter = adapter
-
-            it.forEach {
-                it.result.forEach { it2->
-                    Log.d("Deneme",it2.title.toString())
-                }
+            it.result.forEach {
+                Log.d("Deneme",it.title.toString())
             }
+
         }
 
         return binding.root
