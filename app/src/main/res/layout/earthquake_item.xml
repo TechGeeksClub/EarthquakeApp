@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="7dp"
     android:layout_height="wrap_content">
 
 
@@ -12,8 +11,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
         android:src="@drawable/shape"
+        app:layout_constraintBottom_toBottomOf="@+id/stroke"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -23,27 +22,27 @@
         android:id="@+id/countryTV"
         android:layout_width="208dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="Elazığ, Turkey"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="22sp"
+        android:textSize="14sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/stroke"
+        app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
         app:layout_constraintStart_toEndOf="@+id/countryFlagIV"
         app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="wrap_content"
-        android:padding="5dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/stroke"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
-        app:layout_constraintStart_toEndOf="@+id/countryTV"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -66,37 +65,55 @@
         </TextView>
 
         <TextView
-            android:id="@+id/HowManyMinutesTV"
+            android:id="@+id/dateTimeTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:maxLines="1"
+
+            android:text="10:55"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/intensityTV">
+
+        </TextView>
+
+
+        <TextView
+            android:id="@+id/minutesPassedTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:gravity="center"
             android:maxLines="1"
             android:text="10 minutes ago"
 
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="11sp"
+            android:textSize="10sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/intensityTV"
-            app:layout_constraintVertical_bias="0.157">
+            app:layout_constraintTop_toBottomOf="@+id/dateTimeTV">
 
         </TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
+        android:id="@+id/stroke"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="28dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@+id/countryTV"
-        tools:layout_editor_absoluteX="6dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="7dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
