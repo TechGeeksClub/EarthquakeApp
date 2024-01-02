@@ -53,7 +53,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             binding.recyclerView.adapter = adapter
 
             it.forEach {
-                Log.d("deneme",it.result.toString())
+                it.result.forEach { it2->
+                    Log.d("Deneme",it2.title.toString())
+                }
             }
         }
 

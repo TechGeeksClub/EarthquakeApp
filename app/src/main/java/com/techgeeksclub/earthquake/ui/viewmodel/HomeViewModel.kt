@@ -17,7 +17,9 @@ class HomeViewModel @Inject constructor(var repository: EarthquakeRepository): V
     private val _earthquakes = MutableLiveData<List<Earthquake>>()
     val earthquakes: LiveData<List<Earthquake>> get() = _earthquakes
 
-
+    init {
+        loadEarthquakes()
+    }
 
     private fun loadEarthquakes(){
         CoroutineScope(Dispatchers.Main).launch {
