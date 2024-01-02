@@ -40,7 +40,7 @@ class EarthquakeRecyclerView(val earthquake : ArrayList<Earthquake>) : RecyclerV
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EarthquakeViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.earthquake_row,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.earthquake_item,parent,false)
         return EarthquakeViewHolder(view)
     }
 

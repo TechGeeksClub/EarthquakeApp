@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.techgeeksclub.earthquake.data.entity.Earthquake
@@ -17,16 +18,25 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
 import com.techgeeksclub.earthquake.data.repository.EarthquakeRepository
+import com.techgeeksclub.earthquake.ui.adapter.EarthquakeAdapter
 import com.techgeeksclub.earthquake.ui.adapter.EarthquakeRecyclerView
 import com.techgeeksclub.earthquake.ui.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(), OnMapReadyCallback {
+
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
-    private var adapter : EarthquakeRecyclerView? = null
     private var mMap: GoogleMap? = null
-    private lateinit var list : ArrayList<Earthquake>
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val tempViewModel : HomeViewModel by viewModels()
+        viewModel = tempViewModel
+    }
 
 
     override fun onCreateView(
@@ -35,18 +45,28 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater)
 
+        val layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = layoutManager
+
+        viewModel.earthquakes.observe(viewLifecycleOwner){
+            val adapter = EarthquakeAdapter(requireContext(),it)
+            binding.recyclerView.adapter = adapter
+
+            it.forEach {
+                Log.d("deneme",it.result.toString())
+            }
+        }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val linearLayoutManager :  LinearLayoutManager = LinearLayoutManager(context)
-        binding.recyclerView.layoutManager = linearLayoutManager
-        adapter = EarthquakeRecyclerView(list)
-        binding.recyclerView.adapter = adapter
+
+
         val mapFragment = childFragmentManager.findFragmentById(com.techgeeksclub.earthquake.R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
-        val earthquakeRepository = EarthquakeRepository()
+       /* val earthquakeRepository = EarthquakeRepository()
         earthquakeRepository.getEarthquakes(
             onSuccess = {
                 it.result.forEach {
@@ -61,7 +81,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 Log.d("Eartquake",it.message.toString())
 
             }
-        )
+        )*/
 
     }
 

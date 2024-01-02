@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.techgeeksclub.earthquake.R
 import com.techgeeksclub.earthquake.ui.viewmodel.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
     companion object {

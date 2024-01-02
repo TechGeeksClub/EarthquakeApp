@@ -1,7 +1,10 @@
 package com.techgeeksclub.earthquake.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SettingsViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(): ViewModel() {
 }

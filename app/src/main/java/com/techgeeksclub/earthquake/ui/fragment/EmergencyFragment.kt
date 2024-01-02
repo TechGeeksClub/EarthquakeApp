@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.techgeeksclub.earthquake.R
 import com.techgeeksclub.earthquake.ui.viewmodel.EmergencyViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EmergencyFragment : Fragment() {
 
     companion object {
