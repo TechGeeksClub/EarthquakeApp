@@ -25,7 +25,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter : EarthquakeRecyclerView
     private var mMap: GoogleMap? = null
-    private lateinit var list : ArrayList<Earthquake>
+    private var list : ArrayList<Earthquake> = arrayListOf()
 
 
     override fun onCreateView(
