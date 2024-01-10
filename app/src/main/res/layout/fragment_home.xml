@@ -40,24 +40,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="64dp"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="52dp"
                 android:text="mag: "
                 android:textColor="@color/gray"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/countryTV" />
+                app:layout_constraintTop_toBottomOf="@+id/minutesPassedTV" />
 
             <TextView
                 android:id="@+id/magTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="64dp"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="52dp"
                 android:text="1.6"
                 android:textColor="@color/red"
                 android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@+id/mag"
-                app:layout_constraintTop_toBottomOf="@+id/countryTV" />
+                app:layout_constraintTop_toBottomOf="@+id/minutesPassedTV" />
 
             <TextView
                 android:id="@+id/depth"
@@ -108,8 +108,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/depthTV" />
 
             <TextView
-                android:id="@+id/countryTV"
+                android:id="@+id/minutesPassedTV"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="10 minutes ago"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/countryTV" />
+
+            <TextView
+                android:id="@+id/countryTV"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="62dp"
                 android:gravity="center"

@@ -19,7 +19,9 @@ import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
 import com.techgeeksclub.earthquake.ui.adapter.EarthquakeAdapter
 import com.techgeeksclub.earthquake.ui.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -113,10 +115,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding.magTV.text = item.mag.toString()
         binding.depthTV.text = item.depth.toString()
         binding.countryTV.text = item.title.toString()
+        val minutesPassed = calculateMinutesPassed(item.date.toString())
+        binding.minutesPassedTV.text = "$minutesPassed minutes ago"
 
 
     }
 
+    private fun calculateMinutesPassed(dateTime: String): Long{
+        val inputFormat = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault())
+        val currentDate = Date()
+        val startDate = inputFormat.parse(dateTime)
+        val difference = currentDate.time - startDate.time
 
+        return Math.abs(difference / (60 * 1000)) // toplam milisaniye farkını dakika olarak hesaplar
+    }
 
 }
