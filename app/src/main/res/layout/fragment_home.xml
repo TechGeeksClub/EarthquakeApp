@@ -1,4 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#81BCFC"
@@ -18,14 +20,132 @@
         android:id="@+id/panelContainer"
         android:layout_width="match_parent"
         android:layout_weight="0.8"
-
         android:layout_height="300dp" >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-
             android:background="@drawable/panel_background_rounded_shape"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/earthquakeDetailsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/panel_background_rounded_shape"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/mag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="52dp"
+                android:text="mag: "
+                android:textColor="@color/gray"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/minutesPassedTV" />
+
+            <TextView
+                android:id="@+id/magTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="52dp"
+                android:text="1.6"
+                android:textColor="@color/red"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/mag"
+                app:layout_constraintTop_toBottomOf="@+id/minutesPassedTV" />
+
+            <TextView
+                android:id="@+id/depth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="32dp"
+                android:text="depth: "
+                android:textColor="@color/gray"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mag" />
+
+            <TextView
+                android:id="@+id/depthTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="32dp"
+                android:text="7 km"
+                android:textColor="@color/gray"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/depth"
+                app:layout_constraintTop_toBottomOf="@+id/magTV" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="32dp"
+                android:text="date: "
+                android:textColor="@color/gray"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/depth" />
+
+            <TextView
+                android:id="@+id/dateTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:text="2024.01.10 13:06:39"
+                android:textColor="@color/gray"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/date"
+                app:layout_constraintTop_toBottomOf="@+id/depthTV" />
+
+            <TextView
+                android:id="@+id/minutesPassedTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="10 minutes ago"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/countryTV" />
+
+            <TextView
+                android:id="@+id/countryTV"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="62dp"
+                android:gravity="center"
+                android:text="Elazığ, Turkey"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/back_arrow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/white"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 
     <!-- RecyclerView -->

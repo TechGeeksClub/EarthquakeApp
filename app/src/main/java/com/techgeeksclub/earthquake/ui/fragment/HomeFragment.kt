@@ -9,19 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.techgeeksclub.earthquake.data.entity.Earthquake
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.techgeeksclub.earthquake.data.entity.Result
 import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
-import com.techgeeksclub.earthquake.data.repository.EarthquakeRepository
 import com.techgeeksclub.earthquake.ui.adapter.EarthquakeAdapter
-import com.techgeeksclub.earthquake.ui.adapter.EarthquakeRecyclerView
 import com.techgeeksclub.earthquake.ui.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -49,12 +49,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding.recyclerView.layoutManager = layoutManager
 
         viewModel.earthquakes.observe(viewLifecycleOwner){
-            val adapter = EarthquakeAdapter(requireContext(),it)
+            val adapter = EarthquakeAdapter(requireContext(),it,object :
+                EarthquakeAdapter.OnItemClickListener {
+                override fun onItemClick(item: Result) {
+                    // Details of the clicked item are displayed here.
+                   handleItemClickDetails(item)
+                }
+                })
             binding.recyclerView.adapter = adapter
             it.result.forEach {
                 Log.d("Deneme",it.title.toString())
             }
 
+        }
+
+        binding.backButton.setOnClickListener {
+            binding.earthquakeDetailsLayout.visibility = View.GONE
+            binding.recyclerView.visibility = View.VISIBLE
         }
 
         return binding.root
@@ -66,22 +77,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         val mapFragment = childFragmentManager.findFragmentById(com.techgeeksclub.earthquake.R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
-       /* val earthquakeRepository = EarthquakeRepository()
-        earthquakeRepository.getEarthquakes(
-            onSuccess = {
-                it.result.forEach {
-                    Log.d("Eartquake",it.title.toString())
-                    Log.d("Eartquake",it.mag.toString())
-                    Log.d("Eartquake",it.depth.toString())
-
-
-                }
-            },
-            onFailure = {
-                Log.d("Eartquake",it.message.toString())
-
-            }
-        )*/
 
     }
 
@@ -92,14 +87,47 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(36.8732452, 30.8206177)
-        mMap!!.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
-        )
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+        viewModel.earthquakes.observe(viewLifecycleOwner) { earthquakesList ->
+            mMap?.clear()
+            //Adding pins for each earthquake
+            earthquakesList.result.forEach { earthquake ->
+                val coordinates = earthquake.geojson?.coordinates
+                val latitude = coordinates?.get(1)
+                val longitude = coordinates?.get(0)
+
+                val location = LatLng(latitude!!, longitude!!)
+                mMap?.addMarker(
+                    MarkerOptions()
+                        .position(location)
+                        .title(earthquake.title)
+                )
+            }
+        }
+    }
+
+    private fun handleItemClickDetails(item:Result){
+        Log.d("Tıklanan Öğe", item.title.toString())
+
+        binding.recyclerView.visibility = View.GONE
+        binding.earthquakeDetailsLayout.visibility = View.VISIBLE
+
+        binding.magTV.text = item.mag.toString()
+        binding.depthTV.text = item.depth.toString()
+        binding.countryTV.text = item.title.toString()
+        val minutesPassed = calculateMinutesPassed(item.date.toString())
+        binding.minutesPassedTV.text = "$minutesPassed minutes ago"
+
+
+    }
+
+    private fun calculateMinutesPassed(dateTime: String): Long{
+        val inputFormat = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault())
+        val currentDate = Date()
+        val startDate = inputFormat.parse(dateTime)
+        val difference = currentDate.time - startDate.time
+
+        return Math.abs(difference / (60 * 1000)) // toplam milisaniye farkını dakika olarak hesaplar
     }
 
 }
