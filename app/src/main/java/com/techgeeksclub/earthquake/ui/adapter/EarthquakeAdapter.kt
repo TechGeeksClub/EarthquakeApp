@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class EarthquakeAdapter (var mContext: Context, var earthquakeList: Earthquake) : RecyclerView.Adapter<EarthquakeAdapter.HomePageItemHolder>(){
+class EarthquakeAdapter (var mContext: Context, var earthquakeList: Earthquake, private val listener: OnItemClickListener) : RecyclerView.Adapter<EarthquakeAdapter.HomePageItemHolder>(){
 
     inner class HomePageItemHolder(var item: EarthquakeItemBinding) : RecyclerView.ViewHolder(item.root)
 
@@ -41,6 +41,10 @@ class EarthquakeAdapter (var mContext: Context, var earthquakeList: Earthquake) 
         binding.dateTimeTV.text = formattedTime
         binding.minutesPassedTV.text = "$minutesPassed minutes ago"
 
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(result[position])
+        }
+
 
 
     }
@@ -60,6 +64,10 @@ class EarthquakeAdapter (var mContext: Context, var earthquakeList: Earthquake) 
         val difference = currentDate.time - startDate.time
 
         return abs(difference / (60 * 1000)) // toplam milisaniye farkını dakika olarak hesaplar
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(item: Result)
     }
 
 

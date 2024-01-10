@@ -9,16 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.techgeeksclub.earthquake.data.entity.Result
 import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
 import com.techgeeksclub.earthquake.ui.adapter.EarthquakeAdapter
 import com.techgeeksclub.earthquake.ui.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 
 @AndroidEntryPoint
@@ -46,12 +47,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding.recyclerView.layoutManager = layoutManager
 
         viewModel.earthquakes.observe(viewLifecycleOwner){
-            val adapter = EarthquakeAdapter(requireContext(),it)
+            val adapter = EarthquakeAdapter(requireContext(),it,object :
+                EarthquakeAdapter.OnItemClickListener {
+                override fun onItemClick(item: Result) {
+                    // Details of the clicked item are displayed here.
+                   handleItemClickDetails(item)
+                }
+                })
             binding.recyclerView.adapter = adapter
             it.result.forEach {
                 Log.d("Deneme",it.title.toString())
             }
 
+        }
+
+        binding.backButton.setOnClickListener {
+            binding.earthquakeDetailsLayout.visibility = View.GONE
+            binding.recyclerView.visibility = View.VISIBLE
         }
 
         return binding.root
@@ -91,5 +103,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
+
+    private fun handleItemClickDetails(item:Result){
+        Log.d("Tıklanan Öğe", item.title.toString())
+
+        binding.recyclerView.visibility = View.GONE
+        binding.earthquakeDetailsLayout.visibility = View.VISIBLE
+
+        binding.magTV.text = item.mag.toString()
+        binding.depthTV.text = item.depth.toString()
+        binding.countryTV.text = item.title.toString()
+
+
+    }
+
+
 
 }
