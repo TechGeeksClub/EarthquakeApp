@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -90,6 +91,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         viewModel.earthquakes.observe(viewLifecycleOwner) { earthquakesList ->
             mMap?.clear()
+
+            val turkeyLatLng = LatLng(39.9334, 32.8597)
+            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
+
             //Adding pins for each earthquake
             earthquakesList.result.forEach { earthquake ->
                 val coordinates = earthquake.geojson?.coordinates
