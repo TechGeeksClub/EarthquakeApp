@@ -123,6 +123,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val minutesPassed = calculateMinutesPassed(item.date.toString())
         binding.minutesPassedTV.text = "$minutesPassed minutes ago"
 
+        // Focus the map on the location of the clicked item
+        val latitude = item.geojson?.coordinates?.get(1) ?: 0.0
+        val longitude = item.geojson?.coordinates?.get(0) ?: 0.0
+        val location = LatLng(latitude, longitude)
+        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+
 
     }
 
