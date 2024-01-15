@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.techgeeksclub.earthquake.data.entity.Result
 import com.techgeeksclub.earthquake.databinding.FragmentHomeBinding
@@ -25,7 +27,7 @@ import java.util.Locale
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), OnMapReadyCallback {
+class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
@@ -66,6 +68,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding.backButton.setOnClickListener {
             binding.earthquakeDetailsLayout.visibility = View.GONE
             binding.recyclerView.visibility = View.VISIBLE
+
+
+            mMap.let {
+                val turkeyLatLng = LatLng(39.9334, 32.8597)
+                mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
+            }
         }
 
         return binding.root
@@ -87,9 +95,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
+        mMap?.setOnMarkerClickListener(this)
 
         viewModel.earthquakes.observe(viewLifecycleOwner) { earthquakesList ->
             mMap?.clear()
+
+
+            val turkeyLatLng = LatLng(39.9334, 32.8597)
+            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
+
             //Adding pins for each earthquake
             earthquakesList.result.forEach { earthquake ->
                 val coordinates = earthquake.geojson?.coordinates
@@ -97,13 +111,39 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 val longitude = coordinates?.get(0)
 
                 val location = LatLng(latitude!!, longitude!!)
-                mMap?.addMarker(
+                val marker = mMap?.addMarker(
                     MarkerOptions()
                         .position(location)
                         .title(earthquake.title)
                 )
+                marker?.tag = earthquake
             }
         }
+    }
+    override fun onMarkerClick(marker: Marker): Boolean {
+        // Get information about the clicked marker
+        val earthquakeInfo = marker.tag as? Result
+        earthquakeInfo?.let { showMarkerInfoWindow(it) }
+
+        // Focus the map on the location of the clicked marker
+        marker.position?.let { location ->
+            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+        }
+
+        return true
+    }
+
+    private fun showMarkerInfoWindow(earthquakeInfo: Result) {
+        // Update the info window using the marker's information
+        binding.magTV.text = earthquakeInfo.mag.toString()
+        binding.depthTV.text = earthquakeInfo.depth.toString()
+        binding.countryTV.text = earthquakeInfo.title.toString()
+        val minutesPassed = calculateMinutesPassed(earthquakeInfo.date.toString())
+        binding.minutesPassedTV.text = "$minutesPassed minutes ago"
+
+        // Show info window
+        binding.recyclerView.visibility = View.GONE
+        binding.earthquakeDetailsLayout.visibility = View.VISIBLE
     }
 
     private fun handleItemClickDetails(item:Result){
@@ -117,6 +157,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         binding.countryTV.text = item.title.toString()
         val minutesPassed = calculateMinutesPassed(item.date.toString())
         binding.minutesPassedTV.text = "$minutesPassed minutes ago"
+
+        // Focus the map on the location of the clicked item
+        val latitude = item.geojson?.coordinates?.get(1) ?: 0.0
+        val longitude = item.geojson?.coordinates?.get(0) ?: 0.0
+        val location = LatLng(latitude, longitude)
+        mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
 
 
     }
