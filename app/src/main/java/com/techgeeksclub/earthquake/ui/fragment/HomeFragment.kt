@@ -72,7 +72,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
             mMap.let {
                 val turkeyLatLng = LatLng(39.9334, 32.8597)
-                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
+                mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
             }
         }
 
@@ -162,7 +162,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val latitude = item.geojson?.coordinates?.get(1) ?: 0.0
         val longitude = item.geojson?.coordinates?.get(0) ?: 0.0
         val location = LatLng(latitude, longitude)
-        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+        mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
 
 
     }
