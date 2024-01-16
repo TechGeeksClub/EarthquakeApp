@@ -61,6 +61,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = layoutManager
 
+        checkLocationPermission()
+
 
         viewModel.earthquakes.observe(viewLifecycleOwner){
             val adapter = EarthquakeAdapter(requireContext(),it,object :
@@ -87,7 +89,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
             }
         }
-        checkLocationPermission()
 
         return binding.root
     }
@@ -136,20 +137,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             override fun onLocationChanged(location: Location) {
                 val userLocation = LatLng(location.latitude,location.longitude)
                 mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,15f))
-
             }
         }
     }
-
-
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
         mMap?.setOnMarkerClickListener(this)
 
+
         viewModel.earthquakes.observe(viewLifecycleOwner) { earthquakesList ->
             mMap?.clear()
 
+            checkLocationPermission()
 
             val turkeyLatLng = LatLng(39.9334, 32.8597)
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
