@@ -1,10 +1,18 @@
 package com.techgeeksclub.earthquake.ui.fragment
 
+import android.Manifest
+import android.content.Context.LOCATION_SERVICE
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -32,6 +40,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
     private var mMap: GoogleMap? = null
+    private lateinit var locationManager: LocationManager
+    private lateinit var locationListener: LocationListener
+    private  val LOCATION_PERMISSION_REQUEST_CODE = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +60,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = layoutManager
+
 
         viewModel.earthquakes.observe(viewLifecycleOwner){
             val adapter = EarthquakeAdapter(requireContext(),it,object :
@@ -75,6 +87,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
             }
         }
+        checkLocationPermission()
 
         return binding.root
     }
@@ -92,6 +105,43 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
     }
+
+    private fun checkLocationPermission(){
+        // Konum izni kontrolü
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            // Konum izni varsa konumu al ve haritada göster
+            showCurrentLocation()
+            mMap?.isMyLocationEnabled = true
+        } else {
+            // Konum izni yoksa izin iste
+            requestLocationPermission()
+        }
+    }
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+    private fun showCurrentLocation() {
+        // Kullanıcının mevcut konumunu al
+        locationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
+
+        locationListener = object : LocationListener{
+            override fun onLocationChanged(location: Location) {
+                val userLocation = LatLng(location.latitude,location.longitude)
+                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,15f))
+
+            }
+        }
+    }
+
+
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
@@ -119,6 +169,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 marker?.tag = earthquake
             }
         }
+
     }
     override fun onMarkerClick(marker: Marker): Boolean {
         // Get information about the clicked marker
@@ -147,8 +198,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun handleItemClickDetails(item:Result){
-        Log.d("Tıklanan Öğe", item.title.toString())
-
         binding.recyclerView.visibility = View.GONE
         binding.earthquakeDetailsLayout.visibility = View.VISIBLE
 
@@ -163,8 +212,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val longitude = item.geojson?.coordinates?.get(0) ?: 0.0
         val location = LatLng(latitude, longitude)
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
-
-
     }
 
     private fun calculateMinutesPassed(dateTime: String): Long{
