@@ -43,6 +43,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var locationManager: LocationManager
     private lateinit var locationListener: LocationListener
     private  val LOCATION_PERMISSION_REQUEST_CODE = 1
+    private var userLocation: LatLng? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +63,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         binding.recyclerView.layoutManager = layoutManager
 
         checkLocationPermission()
-
 
         viewModel.earthquakes.observe(viewLifecycleOwner){
             val adapter = EarthquakeAdapter(requireContext(),it,object :
@@ -129,14 +129,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             LOCATION_PERMISSION_REQUEST_CODE
         )
     }
-    private fun showCurrentLocation() {
+    private fun showCurrentLocation(){
         // Kullanıcının mevcut konumunu al
         locationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
 
         locationListener = object : LocationListener{
             override fun onLocationChanged(location: Location) {
-                val userLocation = LatLng(location.latitude,location.longitude)
-                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,15f))
+                userLocation = LatLng(location.latitude,location.longitude)
+                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation!!,15f))
             }
         }
     }
@@ -212,8 +212,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val longitude = item.geojson?.coordinates?.get(0) ?: 0.0
         val location = LatLng(latitude, longitude)
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+
+        showCurrentLocation()
+
+        binding.distanceTV.text = userLocation?.let { calculateDistance(location, it).toString() }
     }
 
+    private fun calculateDistance(earthquakeLocation: LatLng, userLocation: LatLng): Float {
+        val result = FloatArray(1)
+        Location.distanceBetween(
+            earthquakeLocation.latitude, earthquakeLocation.longitude,
+            userLocation.latitude, userLocation.longitude, result
+        )
+
+        return result[0] / 1000 // m to km
+    }
     private fun calculateMinutesPassed(dateTime: String): Long{
         val inputFormat = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault())
         val currentDate = Date()
