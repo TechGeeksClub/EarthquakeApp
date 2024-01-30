@@ -2,7 +2,9 @@ package com.techgeeksclub.earthquake.di
 
 import android.content.Context
 import com.techgeeksclub.earthquake.data.datasource.EarthquakeDataSource
+import com.techgeeksclub.earthquake.data.datasource.EmergencyDataSource
 import com.techgeeksclub.earthquake.data.repository.EarthquakeRepository
+import com.techgeeksclub.earthquake.data.repository.EmergencyRepository
 import com.techgeeksclub.earthquake.retrofit.ApiUtils
 import com.techgeeksclub.earthquake.retrofit.EarthquakeDao
 import dagger.Module
@@ -32,6 +34,19 @@ class AppModule {
     fun provideEarthquakeRepository(earthquakeDataSource: EarthquakeDataSource) : EarthquakeRepository {
         return EarthquakeRepository(earthquakeDataSource)
     }
+
+    @Provides
+    @Singleton
+    fun provideEmergencyDataSource(context: Context) : EmergencyDataSource {
+        return EmergencyDataSource(provideContext(context))
+    }
+    @Provides
+    @Singleton
+    fun provideEmergencyRepository(emergencyDataSource: EmergencyDataSource) : EmergencyRepository {
+        return EmergencyRepository(emergencyDataSource)
+    }
+
+
 
     @Provides
     @Singleton
