@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory app:title="@string/SettingsCategoryNotifications" >
+        <SwitchPreferenceCompat
+            android:background="@color/red"
+            app:key="notifications"
+            app:title="Enable Notifications"
+            app:summary="Activate it to receive notifications when we receive earthquake data."/>
+
+        <SeekBarPreference
+            app:min="1"
+            android:max="10"
+            app:showSeekBarValue="true"
+            app:key="MinimumEarthquakeMagnitude"
+            app:title="Minimum Earthquake Magnitude"
+            app:summary="Select minimum earthquake magnitude for notifications"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/SettingsCategoryMaps">
+        <ListPreference
+            app:key="MapsType"
+            app:entries="@array/MapsTypeEntries"
+            app:entryValues="@array/MapsTypeEntries"
+            app:persistent="false"
+            android:defaultValue="2"
+            app:title="Select Maps Type"/>
+
+        <CheckBoxPreference
+            app:key="FaultLines"
+            app:title="Fault Lines"
+            app:summary="Show fault lines?"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/SettingsCategoryFilter">
+        <ListPreference
+            app:key="MagnitudeFilter"
+            app:entries="@array/MagnitudeFilterEntries"
+            app:entryValues="@array/MagnitudeFilterEntries"
+            app:persistent="false"
+            app:summary="Select Minimum earthquake magnitude to display"
+            app:title="Minimum Magnitude"/>
+
+        <Preference
+            app:key="feedback"
+            app:title="Send feedback"
+            app:summary="Report technical issues or suggest new features"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/SettingsCategoryOther">
+        <SwitchPreferenceCompat
+            app:key="notifications"
+            app:title="Enable message notifications"/>
+
+        <Preference
+            app:key="feedback"
+            app:title="Send feedback"
+            app:summary="Report technical issues or suggest new features"/>
+    </PreferenceCategory>
+</PreferenceScreen>
