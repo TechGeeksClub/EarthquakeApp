@@ -139,7 +139,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         binding.depthTV.text = earthquakeInfo.depth.toString()
         binding.countryTV.text = earthquakeInfo.title.toString()
         val minutesPassed = calculateMinutesPassed(earthquakeInfo.date.toString())
-        binding.minutesPassedTV.text = "$minutesPassed minutes ago"
+        binding.minutesPassedTV.text = "$minutesPassed ago"
 
         // Show info window
         binding.recyclerView.visibility = View.GONE
@@ -156,7 +156,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         binding.depthTV.text = item.depth.toString()
         binding.countryTV.text = item.title.toString()
         val minutesPassed = calculateMinutesPassed(item.date.toString())
-        binding.minutesPassedTV.text = "$minutesPassed minutes ago"
+        binding.minutesPassedTV.text = "$minutesPassed ago"
 
         // Focus the map on the location of the clicked item
         val latitude = item.geojson?.coordinates?.get(1) ?: 0.0
@@ -167,13 +167,33 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     }
 
-    private fun calculateMinutesPassed(dateTime: String): Long{
+    private fun calculateMinutesPassed(dateTime: String): String{
         val inputFormat = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault())
         val currentDate = Date()
         val startDate = inputFormat.parse(dateTime)
         val difference = currentDate.time - startDate.time
 
-        return Math.abs(difference / (60 * 1000)) // toplam milisaniye farkını dakika olarak hesaplar
+        val differenceInMinutes = Math.abs(difference / (60 * 1000))
+
+        return  formatTimeDifference(differenceInMinutes)// toplam milisaniye farkını dakika olarak hesaplar
+    }
+
+    private fun formatTimeDifference(minutes : Long) : String {
+
+        val hours = minutes / 60
+        val remainingMinutes = minutes % 60
+
+        val formattedString = StringBuilder()
+
+        if (hours > 0) {
+            formattedString.append("$hours h")
+        }
+        if (remainingMinutes > 0) {
+            formattedString.append(" $remainingMinutes m")
+        }
+
+        return formattedString.toString().trim()
+
     }
 
 }
