@@ -1,10 +1,18 @@
 package com.techgeeksclub.earthquake.ui.fragment
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -32,6 +40,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
     private var mMap: GoogleMap? = null
+    private lateinit var locationManager: LocationManager
+    private lateinit var locationListener: LocationListener
+    private  val LOCATION_PERMISSION_REQUEST_CODE = 1
+    private var userLocation: LatLng? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +61,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = layoutManager
+
+        checkLocationPermission()
+
 
         viewModel.earthquakes.observe(viewLifecycleOwner){
             val adapter = EarthquakeAdapter(requireContext(),it,object :
@@ -93,12 +108,49 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
+    private fun checkLocationPermission(){
+        // Konum izni kontrolü
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            // Konum izni varsa konumu al ve haritada göster
+            showCurrentLocation()
+            mMap?.isMyLocationEnabled = true
+        } else {
+            // Konum izni yoksa izin iste
+            requestLocationPermission()
+        }
+    }
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+    private fun showCurrentLocation(){
+        // Kullanıcının mevcut konumunu al
+        locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                userLocation = LatLng(location.latitude,location.longitude)
+                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation!!,15f))
+            }
+        }
+    }
+
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
         mMap?.setOnMarkerClickListener(this)
 
         viewModel.earthquakes.observe(viewLifecycleOwner) { earthquakesList ->
             mMap?.clear()
+
+            checkLocationPermission()
+
 
 
             val turkeyLatLng = LatLng(39.9334, 32.8597)
@@ -164,7 +216,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val location = LatLng(latitude, longitude)
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
 
+        showCurrentLocation()
 
+        binding.distanceTV.text = userLocation?.let { calculateDistance(location, it).toString() }
+
+
+    }
+
+    private fun calculateDistance(earthquakeLocation: LatLng, userLocation: LatLng): Float {
+        val result = FloatArray(1)
+        Location.distanceBetween(
+            earthquakeLocation.latitude, earthquakeLocation.longitude,
+            userLocation.latitude, userLocation.longitude, result
+        )
+
+        return result[0] / 1000 // m to km
     }
 
     private fun calculateMinutesPassed(dateTime: String): String{
