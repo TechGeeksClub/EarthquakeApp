@@ -1,18 +1,10 @@
 package com.techgeeksclub.earthquake.ui.fragment
 
-import android.Manifest
-import android.content.Context.LOCATION_SERVICE
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -40,10 +32,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
     private var mMap: GoogleMap? = null
-    private lateinit var locationManager: LocationManager
-    private lateinit var locationListener: LocationListener
-    private  val LOCATION_PERMISSION_REQUEST_CODE = 1
-    private var userLocation: LatLng? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +49,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = layoutManager
-
-        checkLocationPermission()
 
         viewModel.earthquakes.observe(viewLifecycleOwner){
             val adapter = EarthquakeAdapter(requireContext(),it,object :
@@ -107,49 +93,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
-    private fun checkLocationPermission(){
-        // Konum izni kontrolü
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            // Konum izni varsa konumu al ve haritada göster
-            showCurrentLocation()
-            mMap?.isMyLocationEnabled = true
-        } else {
-            // Konum izni yoksa izin iste
-            requestLocationPermission()
-        }
-    }
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            LOCATION_PERMISSION_REQUEST_CODE
-        )
-    }
-    private fun showCurrentLocation(){
-        // Kullanıcının mevcut konumunu al
-        locationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
-
-        locationListener = object : LocationListener{
-            override fun onLocationChanged(location: Location) {
-                userLocation = LatLng(location.latitude,location.longitude)
-                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation!!,15f))
-            }
-        }
-    }
-
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
         mMap?.setOnMarkerClickListener(this)
 
-
         viewModel.earthquakes.observe(viewLifecycleOwner) { earthquakesList ->
             mMap?.clear()
 
-            checkLocationPermission()
 
             val turkeyLatLng = LatLng(39.9334, 32.8597)
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
@@ -169,7 +119,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 marker?.tag = earthquake
             }
         }
-
     }
     override fun onMarkerClick(marker: Marker): Boolean {
         // Get information about the clicked marker
@@ -190,7 +139,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         binding.depthTV.text = earthquakeInfo.depth.toString()
         binding.countryTV.text = earthquakeInfo.title.toString()
         val minutesPassed = calculateMinutesPassed(earthquakeInfo.date.toString())
-        binding.minutesPassedTV.text = "$minutesPassed minutes ago"
+        binding.minutesPassedTV.text = "$minutesPassed ago"
 
         // Show info window
         binding.recyclerView.visibility = View.GONE
@@ -198,6 +147,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun handleItemClickDetails(item:Result){
+        Log.d("Tıklanan Öğe", item.title.toString())
+
         binding.recyclerView.visibility = View.GONE
         binding.earthquakeDetailsLayout.visibility = View.VISIBLE
 
@@ -205,7 +156,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         binding.depthTV.text = item.depth.toString()
         binding.countryTV.text = item.title.toString()
         val minutesPassed = calculateMinutesPassed(item.date.toString())
-        binding.minutesPassedTV.text = "$minutesPassed minutes ago"
+        binding.minutesPassedTV.text = "$minutesPassed ago"
 
         // Focus the map on the location of the clicked item
         val latitude = item.geojson?.coordinates?.get(1) ?: 0.0
@@ -213,27 +164,36 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val location = LatLng(latitude, longitude)
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
 
-        showCurrentLocation()
 
-        binding.distanceTV.text = userLocation?.let { calculateDistance(location, it).toString() }
     }
 
-    private fun calculateDistance(earthquakeLocation: LatLng, userLocation: LatLng): Float {
-        val result = FloatArray(1)
-        Location.distanceBetween(
-            earthquakeLocation.latitude, earthquakeLocation.longitude,
-            userLocation.latitude, userLocation.longitude, result
-        )
-
-        return result[0] / 1000 // m to km
-    }
-    private fun calculateMinutesPassed(dateTime: String): Long{
+    private fun calculateMinutesPassed(dateTime: String): String{
         val inputFormat = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault())
         val currentDate = Date()
         val startDate = inputFormat.parse(dateTime)
         val difference = currentDate.time - startDate.time
 
-        return Math.abs(difference / (60 * 1000)) // toplam milisaniye farkını dakika olarak hesaplar
+        val differenceInMinutes = Math.abs(difference / (60 * 1000))
+
+        return  formatTimeDifference(differenceInMinutes)// toplam milisaniye farkını dakika olarak hesaplar
+    }
+
+    private fun formatTimeDifference(minutes : Long) : String {
+
+        val hours = minutes / 60
+        val remainingMinutes = minutes % 60
+
+        val formattedString = StringBuilder()
+
+        if (hours > 0) {
+            formattedString.append("$hours h")
+        }
+        if (remainingMinutes > 0) {
+            formattedString.append(" $remainingMinutes m")
+        }
+
+        return formattedString.toString().trim()
+
     }
 
 }

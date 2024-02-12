@@ -39,7 +39,7 @@ class EarthquakeAdapter (var mContext: Context, var earthquakeList: Earthquake, 
         binding.countryTV.text = result[position].title.toString()
         binding.intensityTV.text = result[position].mag.toString()
         binding.dateTimeTV.text = formattedTime
-        binding.minutesPassedTV.text = "$minutesPassed minutes ago"
+        binding.minutesPassedTV.text = minutesPassed
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(result[position])
@@ -57,13 +57,33 @@ class EarthquakeAdapter (var mContext: Context, var earthquakeList: Earthquake, 
         return outputFormat.format(date)
     }
 
-    private fun calculateMinutesPassed(dateTime: String): Long{
+    private fun calculateMinutesPassed(dateTime: String): String{
         val inputFormat = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault())
         val currentDate = Date()
         val startDate = inputFormat.parse(dateTime)
         val difference = currentDate.time - startDate.time
 
-        return abs(difference / (60 * 1000)) // toplam milisaniye farkını dakika olarak hesaplar
+        val differenceInMinutes = Math.abs(difference / (60 * 1000))
+
+        return  formatTimeDifference(differenceInMinutes)// toplam milisaniye farkını dakika olarak hesaplar
+    }
+
+    private fun formatTimeDifference(minutes : Long) : String {
+
+        val hours = minutes / 60
+        val remainingMinutes = minutes % 60
+
+        val formattedString = StringBuilder()
+
+        if (hours > 0) {
+            formattedString.append("$hours h")
+        }
+        if (remainingMinutes > 0) {
+            formattedString.append(" $remainingMinutes m")
+        }
+
+        return formattedString.toString().trim()
+
     }
 
     interface OnItemClickListener {
