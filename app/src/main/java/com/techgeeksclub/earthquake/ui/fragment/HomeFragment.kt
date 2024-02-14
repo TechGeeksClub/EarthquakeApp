@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
@@ -41,7 +40,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private lateinit var binding: FragmentHomeBinding
     private var mMap: GoogleMap? = null
     private lateinit var locationManager: LocationManager
-    private lateinit var locationListener: LocationListener
     private  val LOCATION_PERMISSION_REQUEST_CODE = 1
     private var userLocation: LatLng? = null
 
@@ -62,7 +60,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = layoutManager
 
-        checkLocationPermission()
+        getUserLocation()
 
 
         viewModel.earthquakes.observe(viewLifecycleOwner){
@@ -96,11 +94,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         val mapFragment = childFragmentManager.findFragmentById(com.techgeeksclub.earthquake.R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -108,7 +103,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
-    private fun checkLocationPermission(){
+    private fun getUserLocation(){
         // Konum izni kontrolü
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -116,7 +111,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             // Konum izni varsa konumu al ve haritada göster
-            showCurrentLocation()
+            locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (lastLocation != null){
+                userLocation = LatLng(lastLocation.latitude,lastLocation.longitude)
+                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation!!,15f))
+                Log.d("kullanici" , userLocation!!.longitude.toString())
+            }
             mMap?.isMyLocationEnabled = true
         } else {
             // Konum izni yoksa izin iste
@@ -130,17 +131,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             LOCATION_PERMISSION_REQUEST_CODE
         )
     }
-    private fun showCurrentLocation(){
-        // Kullanıcının mevcut konumunu al
-        locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        locationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                userLocation = LatLng(location.latitude,location.longitude)
-                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation!!,15f))
-            }
-        }
-    }
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
@@ -149,9 +139,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         viewModel.earthquakes.observe(viewLifecycleOwner) { earthquakesList ->
             mMap?.clear()
 
-            checkLocationPermission()
-
-
+            getUserLocation()
 
             val turkeyLatLng = LatLng(39.9334, 32.8597)
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
@@ -216,21 +204,22 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val location = LatLng(latitude, longitude)
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
 
-        showCurrentLocation()
+        val distance = calculateDistance(location,userLocation)
 
-        binding.distanceTV.text = userLocation?.let { calculateDistance(location, it).toString() }
-
+        binding.distanceTV.text = "$distance km"
 
     }
 
-    private fun calculateDistance(earthquakeLocation: LatLng, userLocation: LatLng): Float {
+    private fun calculateDistance(earthquakeLocation: LatLng, userLocation: LatLng?): Long {
         val result = FloatArray(1)
-        Location.distanceBetween(
-            earthquakeLocation.latitude, earthquakeLocation.longitude,
-            userLocation.latitude, userLocation.longitude, result
-        )
+        if (userLocation != null) {
+            Location.distanceBetween(
+                earthquakeLocation.latitude, earthquakeLocation.longitude,
+                userLocation.latitude, userLocation.longitude, result
+            )
+        }
 
-        return result[0] / 1000 // m to km
+        return (result[0] / 1000).toLong() // m to km
     }
 
     private fun calculateMinutesPassed(dateTime: String): String{
