@@ -14,7 +14,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -72,17 +71,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 }
                 })
             binding.recyclerView.adapter = adapter
-            it.result.forEach {
-                Log.d("Deneme",it.title.toString())
-            }
-
         }
 
         binding.backButton.setOnClickListener {
             binding.earthquakeDetailsLayout.visibility = View.GONE
             binding.recyclerView.visibility = View.VISIBLE
 
-
+            //Focuses back on the map when the back button is pressed
             mMap.let {
                 val turkeyLatLng = LatLng(39.9334, 32.8597)
                 mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(turkeyLatLng, 4f))
@@ -96,11 +91,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(com.techgeeksclub.earthquake.R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
     private fun getUserLocation(){
@@ -166,7 +156,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         earthquakeInfo?.let { showMarkerInfoWindow(it) }
 
         // Focus the map on the location of the clicked marker
-        marker.position?.let { location ->
+        marker.position.let { location ->
             mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
         }
 
@@ -187,8 +177,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun handleItemClickDetails(item:Result){
-        Log.d("Tıklanan Öğe", item.title.toString())
-
         binding.recyclerView.visibility = View.GONE
         binding.earthquakeDetailsLayout.visibility = View.VISIBLE
 
