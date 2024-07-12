@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.techgeeksclub.earthquake.data.entity.EmergencyItem
 import com.techgeeksclub.earthquake.databinding.EmergencyItemBinding
 
-    class EmergencyAdapter(var mContext: Context , var emergencyList : List<EmergencyItem>, private val listener: EmergencyAdapter.OnItemClickListener) :
+    class EmergencyAdapter(var mContext: Context , var emergencyList : List<EmergencyItem>, private val listener:OnItemClickListener) :
     RecyclerView.Adapter<EmergencyAdapter.EmergencyFragmentItemHolder>() {
 
     inner class EmergencyFragmentItemHolder(var item: EmergencyItemBinding) : RecyclerView.ViewHolder(item.root)

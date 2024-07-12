@@ -33,7 +33,7 @@ class WhistleFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View{
         binding = FragmentWhistleBinding.inflate(inflater)
 
         //whistle sound
@@ -49,10 +49,12 @@ class WhistleFragment : Fragment() {
     private fun handleWhistleButtonClick(){
         //playing whistle sound when button is clicked
         if (isPlaying) {
+            binding.whistleButton.setBackgroundResource(R.drawable.whistle_off)
             mediaPlayer.pause()
             mediaPlayer.seekTo(0)
         } else {
             mediaPlayer.start()
+            binding.whistleButton.setBackgroundResource(R.drawable.whistle_on)
         }
         isPlaying = !isPlaying
     }
@@ -78,21 +80,16 @@ class WhistleFragment : Fragment() {
         }
         mediaPlayer.release()
 
-        Log.d("girdi","onDestroyView")
-
         // Ensure WhistleFragment is removed from the back stack
         findNavController().popBackStack(R.id.whistleFragment, true)
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d("girdi","onPause")
+
         // Ensure WhistleFragment is removed from the back stack
         findNavController().popBackStack(R.id.whistleFragment, true)
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d("girdi","onStop")
-    }
+
 }
