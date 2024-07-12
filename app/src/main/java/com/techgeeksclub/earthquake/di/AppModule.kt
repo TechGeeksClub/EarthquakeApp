@@ -1,6 +1,8 @@
 package com.techgeeksclub.earthquake.di
 
 import android.content.Context
+import android.media.MediaPlayer
+import com.techgeeksclub.earthquake.R
 import com.techgeeksclub.earthquake.data.datasource.EarthquakeDataSource
 import com.techgeeksclub.earthquake.data.datasource.EmergencyDataSource
 import com.techgeeksclub.earthquake.data.repository.EarthquakeRepository
@@ -52,5 +54,10 @@ class AppModule {
     @Singleton
     fun provideContext(@ApplicationContext context: Context): Context {
         return context
+    }
+
+    @Provides
+    fun provideMediaPlayer(@ApplicationContext context: Context): MediaPlayer {
+        return MediaPlayer.create(context, R.raw.whistle_sound)
     }
 }
