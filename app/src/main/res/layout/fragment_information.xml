@@ -7,20 +7,13 @@
     android:background="@color/white"
     tools:context=".ui.fragment.InformationFragment">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="62dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
+            android:clickable="false"
+            android:focusable="false"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="82dp"
             app:cardCornerRadius="15dp"
@@ -30,60 +23,36 @@
             app:layout_constraintTop_toTopOf="parent">
 
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
                 android:layout_height="wrap_content">
+
 
                 <ImageButton
                     android:id="@+id/backButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="26dp"
+                    android:layout_width="39dp"
+                    android:layout_height="39dp"
+                    android:layout_marginTop="16dp"
                     android:background="@color/white"
                     android:src="@drawable/back_arrow"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.051"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/titleTV"
-                    android:layout_width="wrap_content"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:padding="8dp"
-                    android:text="@string/informationTitle"
-                    android:textAlignment="center"
-                    android:textColor="@color/red"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:layout_marginBottom="32dp"
+                    android:padding="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/backButton" />
-
-                <TextView
-                    android:id="@+id/entranceTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:text="@string/informationEntrance"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titleTV" />
-
-                <TextView
-                    android:id="@+id/indoorSafetyTipsTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:text="@string/indoorsTips"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/entranceTV" />
 
 
 
@@ -92,6 +61,5 @@
 
         </androidx.cardview.widget.CardView>
 
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
