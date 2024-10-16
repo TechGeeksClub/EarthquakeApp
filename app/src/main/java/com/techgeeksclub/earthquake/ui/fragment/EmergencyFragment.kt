@@ -55,7 +55,11 @@ class EmergencyFragment : Fragment() {
         when(item.emergencyName){
             "Whistle" ->
                 navigateToWhistleFragment()
+
+            "What to Do During an Earthquake?" ->
+                navigateToInformationFragment()
             }
+
     }
 
     private fun navigateToWhistleFragment() {
@@ -64,6 +68,18 @@ class EmergencyFragment : Fragment() {
             null,
             navOptions {
                 popUpTo(R.id.emergencyFragment) {
+                    inclusive = false
+                }
+            }
+        )
+    }
+
+    private fun navigateToInformationFragment() {
+        findNavController().navigate(
+            R.id.action_emergencyFragment_to_informationFragment,
+            null,
+            navOptions {
+                popUpTo(R.id.informationFragment) {
                     inclusive = false
                 }
             }
