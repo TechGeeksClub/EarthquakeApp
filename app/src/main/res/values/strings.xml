@@ -4,12 +4,4 @@
     <string name="Emergency">Emergency</string>
     <string name="Settings">Settings</string>
 
-    //information fragment strings
-    <string name="informationTitle">What To Do During an Earthquake?</string>
-    <string name="informationEntrance">Correct actions to take during an earthquake are critical to your safety. Here are some important tips.</string>
-    <string name="indoorsTips">If you are indoors</string>
-    <string name="stayCalm">1. Stay calm and do not panic.</string>
-    <string name="coverHold">2. Drop, Cover, and Hold On: Get under a sturdy piece of furniture and hold on.</string>
-    <string name="stayAwayWindows">3. Stay away from windows, mirrors, and exterior walls. </string>
-    <string name="safeSpots">4. Move to a safe spot next to a sturdy furniture or an interior wall.</string>
 </resources>
