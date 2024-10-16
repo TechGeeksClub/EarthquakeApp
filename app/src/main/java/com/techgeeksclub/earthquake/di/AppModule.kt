@@ -5,8 +5,10 @@ import android.media.MediaPlayer
 import com.techgeeksclub.earthquake.R
 import com.techgeeksclub.earthquake.data.datasource.EarthquakeDataSource
 import com.techgeeksclub.earthquake.data.datasource.EmergencyDataSource
+import com.techgeeksclub.earthquake.data.datasource.InformationDataSource
 import com.techgeeksclub.earthquake.data.repository.EarthquakeRepository
 import com.techgeeksclub.earthquake.data.repository.EmergencyRepository
+import com.techgeeksclub.earthquake.data.repository.InformationRepository
 import com.techgeeksclub.earthquake.retrofit.ApiUtils
 import com.techgeeksclub.earthquake.retrofit.EarthquakeDao
 import dagger.Module
@@ -47,6 +49,19 @@ class AppModule {
     fun provideEmergencyRepository(emergencyDataSource: EmergencyDataSource) : EmergencyRepository {
         return EmergencyRepository(emergencyDataSource)
     }
+
+    @Provides
+    @Singleton
+    fun provideInformationDataSource() : InformationDataSource{
+        return InformationDataSource()
+    }
+
+    @Provides
+    @Singleton
+    fun provideInformationRepository(informationDataSource: InformationDataSource) : InformationRepository{
+        return InformationRepository(informationDataSource)
+    }
+
 
 
 
