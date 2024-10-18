@@ -21,7 +21,7 @@
         android:textSize="14sp"
         android:textStyle="bold"
         android:padding="20dp"
-        android:text="@string/coverHold"
+        android:text="information"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/informationImgView" />
 
